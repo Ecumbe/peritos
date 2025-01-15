@@ -3,22 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Número de Oficios 2025</title>
-    
+    <title>Número de Oficios</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f8f9fa;
         }
+
         .container {
             max-width: 800px;
             margin: auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         select {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
         }
+
         .number-list {
             display: flex;
             flex-wrap: wrap;
@@ -27,31 +45,51 @@
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
         }
+
         .number-list button {
+            flex: 1 1 60px;
             padding: 10px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            text-align: center;
         }
+
         .number-list button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         table, th, td {
             border: 1px solid #ccc;
         }
+
         th, td {
             padding: 10px;
             text-align: left;
+            font-size: 0.9rem;
         }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
         .reset-button {
             padding: 10px;
             background-color: #dc3545;
@@ -59,8 +97,12 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
         }
+
+        .reset-button:hover {
+            background-color: #c82333;
+        }
+
         .invisible {
             opacity: 0;
             position: absolute;
@@ -68,18 +110,41 @@
             left: 150px;
             cursor: pointer;
         }
+
         .invisible:hover {
             opacity: 1;
             background-color: #dc3545;
             color: white;
         }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .number-list {
+                gap: 5px;
+            }
+
+            .number-list button {
+                flex: 1 1 50px;
+            }
+
+            th, td {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Número de Oficios 2025
+        <h1>
+            Número de Oficios
             <button class="reset-button invisible" id="resetButton">L</button>
         </h1>
+
         <select id="peritoSelect">
             <option value="">Seleccione un Perito</option>
         </select>
@@ -88,17 +153,19 @@
             <!-- Botones de números se generarán dinámicamente aquí -->
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Perito</th>
-                    <th>Número Elegido</th>
-                </tr>
-            </thead>
-            <tbody id="resultTable">
-                <!-- Registros se generarán dinámicamente aquí -->
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Perito</th>
+                        <th>Número Elegido</th>
+                    </tr>
+                </thead>
+                <tbody id="resultTable">
+                    <!-- Registros se generarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -110,7 +177,6 @@
         let availableNumbers = Array.from({ length: 2000 }, (_, i) => i + 1);
         let selectedData = [];
 
-        // Leer y procesar flagrancia.xlsx
         async function loadPeritos() {
             const response = await fetch('flagrancia.xlsx');
             const arrayBuffer = await response.arrayBuffer();
@@ -127,7 +193,6 @@
             });
         }
 
-        // Crear botones de números
         function renderNumberButtons() {
             numberList.innerHTML = '';
             availableNumbers.forEach(num => {
@@ -138,15 +203,13 @@
             });
         }
 
-                // Seleccionar número y registrar
-                function selectNumber(number) {
+        function selectNumber(number) {
             const perito = peritoSelect.value;
             if (!perito) {
                 alert('Seleccione un perito primero.');
                 return;
             }
 
-            // Actualizar datos seleccionados
             selectedData.push({ perito, numero: number });
             availableNumbers = availableNumbers.filter(num => num !== number);
             renderNumberButtons();
@@ -154,7 +217,6 @@
             saveToLocal();
         }
 
-        // Actualizar tabla de resultados
         function updateResultTable() {
             resultTable.innerHTML = '';
             selectedData.forEach(({ perito, numero }) => {
@@ -164,12 +226,10 @@
             });
         }
 
-        // Guardar datos en localStorage
         function saveToLocal() {
             localStorage.setItem('selectedData', JSON.stringify(selectedData));
         }
 
-        // Cargar datos de localStorage
         function loadFromLocal() {
             const storedData = localStorage.getItem('selectedData');
             if (storedData) {
@@ -180,7 +240,6 @@
             }
         }
 
-        // Limpiar datos
         function clearData() {
             selectedData = [];
             availableNumbers = Array.from({ length: 2000 }, (_, i) => i + 1);
@@ -189,31 +248,11 @@
             localStorage.removeItem('selectedData');
         }
 
-        // Agregar evento al botón de limpiar
         resetButton.addEventListener('click', clearData);
 
-        // Inicializar
         loadPeritos();
         renderNumberButtons();
         loadFromLocal();
-       // Agregar función para generar archivo CSV
-function generateCsv() {
-    const csvContent = `Perito,Numero\n` + selectedData.map(({ perito, numero }) => `${perito},${numero}`).join('\n');
-    const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvContent}`);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'numeros.csv');
-    link.click();
-}
-
-// Agregar botón para generar archivo CSV
-const csvButton = document.createElement('button');
-csvButton.textContent = '_';
-csvButton.onclick = generateCsv;
-csvButton.className = 'invisible';
-csvButton.style.top = '0';
-csvButton.style.left = '250px';
-document.body.appendChild(csvButton);
         
     </script>
     <button onclick="window.location.href='index.html'" class="btn btn-primary">Regresar</button>
