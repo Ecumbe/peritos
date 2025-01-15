@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#search-btn {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#search-btn:hover {
+  transform: scale(1.05);
+  background-color: #3b82f6;
+}
+
+body {
+  background-color: #f3f4f6;
+}
+
+.container {
+  max-width: 100%;
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 2rem;
+  }
+  #search-input {
+    width: 100%;
+  }
+  .table-auto th, .table-auto td {
+    font-size: 0.875rem;
+  }
+}

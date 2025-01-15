@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Número de Oficios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .number-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .number-list button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .number-list button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .reset-button {
+            padding: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .invisible {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 150px;
+            cursor: pointer;
+        }
+        .invisible:hover {
+            opacity: 1;
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Número de Oficios
+            <button class="reset-button invisible" id="resetButton">L</button>
+        </h1>
+        <select id="peritoSelect">
+            <option value="">Seleccione un Perito</option>
+        </select>
+
+        <div class="number-list" id="numberList">
+            <!-- Botones de números se generarán dinámicamente aquí -->
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Perito</th>
+                    <th>Número Elegido</th>
+                </tr>
+            </thead>
+            <tbody id="resultTable">
+                <!-- Registros se generarán dinámicamente aquí -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        const peritoSelect = document.getElementById('peritoSelect');
+        const numberList = document.getElementById('numberList');
+        const resultTable = document.getElementById('resultTable');
+        const resetButton = document.getElementById('resetButton');
+        let availableNumbers = Array.from({ length: 2000 }, (_, i) => i + 1);
+        let selectedData = [];
+
+        // Leer y procesar flagrancia.xlsx
+        async function loadPeritos() {
+            const response = await fetch('flagrancia.xlsx');
+            const arrayBuffer = await response.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(sheet);
+
+            const peritos = [...new Set(data.map(row => row.PERITO))];
+            peritos.forEach(perito => {
+                const option = document.createElement('option');
+                option.value = perito;
+                option.textContent = perito;
+                peritoSelect.appendChild(option);
+            });
+        }
+
+        // Crear botones de números
+        function renderNumberButtons() {
+            numberList.innerHTML = '';
+            availableNumbers.forEach(num => {
+                const button = document.createElement('button');
+                button.textContent = num;
+                button.onclick = () => selectNumber(num);
+                numberList.appendChild(button);
+            });
+        }
+
+                // Seleccionar número y registrar
+                function selectNumber(number) {
+            const perito = peritoSelect.value;
+            if (!perito) {
+                alert('Seleccione un perito primero.');
+                return;
+            }
+
+            // Actualizar datos seleccionados
+            selectedData.push({ perito, numero: number });
+            availableNumbers = availableNumbers.filter(num => num !== number);
+            renderNumberButtons();
+            updateResultTable();
+            saveToLocal();
+        }
+
+        // Actualizar tabla de resultados
+        function updateResultTable() {
+            resultTable.innerHTML = '';
+            selectedData.forEach(({ perito, numero }) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${perito}</td><td>${numero}</td>`;
+                resultTable.appendChild(row);
+            });
+        }
+
+        // Guardar datos en localStorage
+        function saveToLocal() {
+            localStorage.setItem('selectedData', JSON.stringify(selectedData));
+        }
+
+        // Cargar datos de localStorage
+        function loadFromLocal() {
+            const storedData = localStorage.getItem('selectedData');
+            if (storedData) {
+                selectedData = JSON.parse(storedData);
+                updateResultTable();
+                availableNumbers = availableNumbers.filter(num => !selectedData.find(data => data.numero === num));
+                renderNumberButtons();
+            }
+        }
+
+        // Limpiar datos
+        function clearData() {
+            selectedData = [];
+            availableNumbers = Array.from({ length: 2000 }, (_, i) => i + 1);
+            renderNumberButtons();
+            updateResultTable();
+            localStorage.removeItem('selectedData');
+        }
+
+        // Agregar evento al botón de limpiar
+        resetButton.addEventListener('click', clearData);
+
+        // Inicializar
+        loadPeritos();
+        renderNumberButtons();
+        loadFromLocal();
+       // Agregar función para generar archivo CSV
+function generateCsv() {
+    const csvContent = `Perito,Numero\n` + selectedData.map(({ perito, numero }) => `${perito},${numero}`).join('\n');
+    const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvContent}`);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'numeros.csv');
+    link.click();
+}
+
+// Agregar botón para generar archivo CSV
+const csvButton = document.createElement('button');
+csvButton.textContent = '_';
+csvButton.onclick = generateCsv;
+csvButton.className = 'invisible';
+csvButton.style.top = '0';
+csvButton.style.left = '250px';
+document.body.appendChild(csvButton);
+    </script>
+</body>
+</html>

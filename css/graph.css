@@ -1,0 +1,21 @@
+/* Estilos específicos para el gráfico */
+#graph-container {
+  background-color: #f3f4f6;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+  max-width: 100%;
+}
+
+/* Barras rojas si menos de 5 "SI" */
+.bar-red {
+  background-color: red;
+}
+
+/* Barras azules si más de 5 "SI" */
+.bar-blue {
+  background-color: blue;
+}
