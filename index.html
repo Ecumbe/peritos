@@ -8,49 +8,50 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="./css/styles.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen font-sans flex justify-center items-center">
+<body class="bg-gray-100 text-gray-800 min-h-screen font-sans flex justify-center items-center p-4">
 
   <!-- Contenedor principal -->
   <div class="container mx-auto p-6 bg-white shadow-xl rounded-xl w-full max-w-4xl">
     <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">Búsqueda de Datos - Flagrancia</h1>
 
-    
     <!-- Barra de búsqueda por IF o DETENIDO -->
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
       <input type="text" id="search-input" placeholder="Buscar por IF o DETENIDO..." class="w-full md:w-2/3 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <button id="search-btn" class="ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
+      <button id="search-btn" class="w-full md:w-auto ml-0 md:ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
     </div>
 
     <!-- Tabla de resultados por IF o DETENIDO -->
-    <table id="results-table" class="table-auto w-full mt-6 hidden">
-      <thead class="bg-blue-100">
-        <tr>
-          <th class="border p-3 text-sm">NUM</th>
-          <th class="border p-3 text-sm">IF</th>
-          <th class="border p-3 text-sm">GRADO</th>
-          <th class="border p-3 text-sm">PERITO</th>
-          <th class="border p-3 text-sm">DELITO</th>
-          <th class="border p-3 text-sm">DETENIDO</th>
-          <th class="border p-3 text-sm">FISCAL</th>
-          <th class="border p-3 text-sm">FISCALÍA</th>
-          <th class="border p-3 text-sm">F_INGRESO</th>
-          <th class="border p-3 text-sm">CUMPLIMIENTO</th>
-          <th class="border p-3 text-sm">F_CUMPLIMIENTO</th>
-          <th class="border p-3 text-sm">N_OFICIO</th>
-        </tr>
-      </thead>
-      <tbody id="results-body" class="text-sm text-center"></tbody>
-    </table>
+    <div class="overflow-x-auto">
+      <table id="results-table" class="table-auto w-full mt-6 hidden">
+        <thead class="bg-blue-100">
+          <tr>
+            <th class="border p-3 text-sm">NUM</th>
+            <th class="border p-3 text-sm">IF</th>
+            <th class="border p-3 text-sm">GRADO</th>
+            <th class="border p-3 text-sm">PERITO</th>
+            <th class="border p-3 text-sm">DELITO</th>
+            <th class="border p-3 text-sm">DETENIDO</th>
+            <th class="border p-3 text-sm">FISCAL</th>
+            <th class="border p-3 text-sm">FISCALÍA</th>
+            <th class="border p-3 text-sm">F_INGRESO</th>
+            <th class="border p-3 text-sm">CUMPLIMIENTO</th>
+            <th class="border p-3 text-sm">F_CUMPLIMIENTO</th>
+            <th class="border p-3 text-sm">N_OFICIO</th>
+          </tr>
+        </thead>
+        <tbody id="results-body" class="text-sm text-center"></tbody>
+      </table>
+    </div>
 
     <!-- Filtros por fecha -->
-    <div class="flex justify-between items-center mb-4 mt-8">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-4 mt-8 space-y-4 md:space-y-0">
       <input type="date" id="date-from" class="w-full md:w-2/3 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
       <input type="date" id="date-to" class="w-full md:w-2/3 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <button id="cumplimiento-search-btn" class="ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
+      <button id="cumplimiento-search-btn" class="w-full md:w-auto ml-0 md:ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
     </div>
 
     <!-- Tabla de resultados de cumplimiento -->
-    <div class="overflow-y-auto max-h-96">
+    <div class="overflow-x-auto overflow-y-auto max-h-96">
       <table id="cumplimiento-results-table" class="table-auto w-full mt-6 hidden">
         <thead class="bg-blue-100">
           <tr>
@@ -66,39 +67,40 @@
     </div>
 
     <!-- Barra de búsqueda por PERITO -->
-    <div class="flex justify-between items-center mb-4 mt-8">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-4 mt-8 space-y-4 md:space-y-0">
       <input type="text" id="perito-search-input" placeholder="Buscar por Perito..." class="w-full md:w-2/3 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
       <select id="cumplimiento-select" class="w-full md:w-2/3 p-3 border rounded-md shadow-md">
         <option value="">Todos los Cumplimientos</option>
         <option value="SI">Cumple (SI)</option>
         <option value="NO">No Cumple (NO)</option>
       </select>
-      <button id="perito-search-btn" class="ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
+      <button id="perito-search-btn" class="w-full md:w-auto ml-0 md:ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
     </div>
 
     <!-- Tabla de resultados por PERITO -->
-    <div class="overflow-y-auto max-h-96">
-        <table id="perito-results-table" class="table-auto w-full mt-6 hidden">
-          <thead class="bg-blue-100">
-            <tr>
-              <th class="border p-3 text-sm">NUM</th>
-              <th class="border p-3 text-sm">IF</th>
-              <th class="border p-3 text-sm">GRADO</th>
-              <th class="border p-3 text-sm">PERITO</th>
-              <th class="border p-3 text-sm">DELITO</th>
-              <th class="border p-3 text-sm">DETENIDO</th>
-              <th class="border p-3 text-sm">FISCAL</th>
-              <th class="border p-3 text-sm">FISCALIA</th>
-              <th class="border p-3 text-sm">F_INGRESO</th>
-              <th class="border p-3 text-sm">CUMPLIMIENTO</th>
-              <th class="border p-3 text-sm">F_CUMPLIMIENTO</th>
-              <th class="border p-3 text-sm">N_OFICIO</th>
-            </tr>
-          </thead>
-          <tbody id="perito-results-body" class="text-sm text-center"></tbody>
-        </table>
+    <div class="overflow-x-auto overflow-y-auto max-h-96">
+      <table id="perito-results-table" class="table-auto w-full mt-6 hidden">
+        <thead class="bg-blue-100">
+          <tr>
+            <th class="border p-3 text-sm">NUM</th>
+            <th class="border p-3 text-sm">IF</th>
+            <th class="border p-3 text-sm">GRADO</th>
+            <th class="border p-3 text-sm">PERITO</th>
+            <th class="border p-3 text-sm">DELITO</th>
+            <th class="border p-3 text-sm">DETENIDO</th>
+            <th class="border p-3 text-sm">FISCAL</th>
+            <th class="border p-3 text-sm">FISCALÍA</th>
+            <th class="border p-3 text-sm">F_INGRESO</th>
+            <th class="border p-3 text-sm">CUMPLIMIENTO</th>
+            <th class="border p-3 text-sm">F_CUMPLIMIENTO</th>
+            <th class="border p-3 text-sm">N_OFICIO</th>
+          </tr>
+        </thead>
+        <tbody id="perito-results-body" class="text-sm text-center"></tbody>
+      </table>
     </div>
-    <button onclick="window.location.href='elegir-numeros.html'">Elegir Números de oficios</button>
+
+    <button onclick="window.location.href='elegir-numeros.html'" class="mt-6 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-all duration-300 transform hover:scale-105">Elegir Números de Oficios</button>
   </div>
 
   <script src="js/app.js"></script>
