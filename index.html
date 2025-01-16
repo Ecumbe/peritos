@@ -67,14 +67,15 @@
         <tbody id="cumplimiento-results-body" class="text-sm text-center"></tbody>
       </table>
     </div>
-
+<!-- Encabezado para la tabla -->
+    <h2 style="font-size: 1.2rem; margin-bottom: 10px; text-align: center; color: #333;">Busqueda de todas las delegaciones por perito</h2>
     <!-- Barra de búsqueda por PERITO -->
     <div class="flex flex-col md:flex-row justify-between items-center mb-4 mt-8 space-y-4 md:space-y-0">
       <input type="text" id="perito-search-input" placeholder="Buscar por Perito..." class="w-full md:w-2/3 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
       <select id="cumplimiento-select" class="w-full md:w-2/3 p-3 border rounded-md shadow-md">
-        <option value="">Todos los Cumplimientos</option>
-        <option value="SI">Cumple (SI)</option>
-        <option value="NO">No Cumple (NO)</option>
+        <option value="">Todos las delegaciones</option>
+        <option value="SI">Cumplidas</option>
+        <option value="NO">No Cumplidas</option>
       </select>
       <button id="perito-search-btn" class="w-full md:w-auto ml-0 md:ml-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105">Buscar</button>
     </div>
